@@ -1,0 +1,14 @@
+dev:
+  log_level: DEBUG
+  greeting_prefix: "[DEV]"
+  save_output: true
+
+uat:
+  log_level: INFO
+  greeting_prefix: "[UAT]"
+  save_output: false
+
+prod:
+  log_level: WARNING
+  greeting_prefix: "[PROD]"
+  save_output: false

@@ -2,3 +2,4 @@ black
 isort
 colorlog
 pre-commit
+PyYAML
