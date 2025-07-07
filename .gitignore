@@ -1,0 +1,29 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Logs
+logs/
+*.log
+
+# Outputs
+outputs/
+*.txt
+
+# VS Code & IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Pre-commit
+.pre-commit-cache/
