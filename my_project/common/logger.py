@@ -3,7 +3,7 @@ import sys
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-from my_project.common.paths import LOG_DIR
+from common.paths import LOG_DIR
 
 try:
     import colorlog

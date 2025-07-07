@@ -1,8 +1,8 @@
 import argparse
 from datetime import datetime
 
-from my_project.common.logger import configure_logger
-from my_project.common.paths import OUTPUTS_DIR
+from common.logger import configure_logger
+from common.paths import OUTPUTS_DIR
 
 logger = configure_logger(__name__)
 
