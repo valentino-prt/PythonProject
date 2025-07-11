@@ -1,4 +1,26 @@
-import asyncio
+async def main():
+    object_ids = range(1000)  # ou 20000 dans ton cas
+    semaphore = asyncio.Semaphore(100)  # limite de connexions
+    results = []
+
+    async with aiohttp.ClientSession() as session:
+        tasks = [
+            MyObjectClient(obj_id, session, semaphore).run()
+            for obj_id in object_ids
+        ]
+
+        # Utilise gather par batch pour éviter de charger 20000 tasks d'un coup
+        BATCH_SIZE = 500
+        for i in range(0, len(tasks), BATCH_SIZE):
+            batch = tasks[i:i+BATCH_SIZE]
+            batch_results = await asyncio.gather(*batch)
+            results.extend(batch_results)
+
+    print("All tasks done.")
+
+asyncio.run(main())
+
+ import asyncio
 import aiohttp
 
 CONCURRENCY_LIMIT = 100  # Tune based on your system/network
