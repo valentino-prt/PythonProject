@@ -39,3 +39,45 @@ async def run_batches():
     for i in range(0, len(object_ids), BATCH_SIZE):
         batch = tasks[i:i+BATCH_SIZE]
         await asyncio.gather(*batch)
+        
+        
+import asyncio
+import aiohttp
+import random
+
+class MyObjectClient:
+    def __init__(self, obj_id: int, session: aiohttp.ClientSession, semaphore: asyncio.Semaphore):
+        self.obj_id = obj_id
+        self.session = session
+        self.semaphore = semaphore
+
+    async def fetch_with_retry(self, url: str, retries: int = 3):
+        for attempt in range(1, retries + 1):
+            try:
+                async with self.semaphore:
+                    async with self.session.get(url, timeout=10) as response:
+                        response.raise_for_status()
+                        return await response.text()
+            except Exception as e:
+                if attempt == retries:
+                    print(f"[{self.obj_id}] Failed to fetch {url}: {e}")
+                    return None
+                await asyncio.sleep(random.uniform(0.5, 1.5))  # backoff
+
+    async def run(self):
+        base_url = "https://api.example.com/object"
+        endpoints = [
+            f"{base_url}/{self.obj_id}/details",
+            f"{base_url}/{self.obj_id}/status",
+            f"{base_url}/{self.obj_id}/history",
+            f"{base_url}/{self.obj_id}/metrics"
+        ]
+
+        results = await asyncio.gather(*(self.fetch_with_retry(url) for url in endpoints))
+        return {
+            "object_id": self.obj_id,
+            "details": results[0],
+            "status": results[1],
+            "history": results[2],
+            "metrics": results[3],
+        }
